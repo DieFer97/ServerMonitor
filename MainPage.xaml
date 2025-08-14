@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:ServerMonitor.ViewModels"
+             xmlns:microcharts="clr-namespace:Microcharts.Maui;assembly=Microcharts.Maui"
+             x:Class="ServerMonitor.MainPage"
+             BackgroundColor="{StaticResource Secondary}">
+
+    <ContentPage.BindingContext>
+        <vm:MainViewModel/>
+    </ContentPage.BindingContext>
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="20">
+
+            <Label Text="Monitor de Servidor"
+                   FontSize="32"
+                   HorizontalOptions="Center"
+                   TextColor="blue"/>
+
+            <Frame BackgroundColor="#2A2A2A" CornerRadius="15" Padding="20">
+                <VerticalStackLayout>
+                    <Label Text="Temperatura" FontSize="18" TextColor="LightGray"/>
+                    <Label Text="{Binding Temperature, StringFormat='{0:0.0} °C'}"
+                           FontSize="48"
+                           TextColor="Red"
+                           HorizontalOptions="Center"/>
+                </VerticalStackLayout>
+            </Frame>
+
+            <Frame BackgroundColor="#2A2A2A" CornerRadius="15" Padding="20">
+                <VerticalStackLayout>
+                    <Label Text="Flama (LDR)" FontSize="18" TextColor="LightGray"/>
+                    <Label Text="{Binding Light}"
+                           FontSize="48"
+                           TextColor="Orange"
+                           HorizontalOptions="Center"/>
+                </VerticalStackLayout>
+            </Frame>
+
+            <Frame CornerRadius="15" Padding="20"
+                   BackgroundColor="{Binding Alarm, Converter={StaticResource BoolToColor}}">
+                <Label Text="{Binding Alarm, StringFormat='Alarma: {0}'}"
+                       FontSize="24"
+                       TextColor="White"
+                       HorizontalOptions="Center"/>
+            </Frame>
+
+            <Label Text="Evolución Temperatura" TextColor="blue" FontSize="16"/>
+            <microcharts:ChartView Chart="{Binding TempEntries}" HeightRequest="200"/>
+
+            <Label Text="Evolución Flama" TextColor="blue" FontSize="16"/>
+            <microcharts:ChartView Chart="{Binding LightEntries}" HeightRequest="200"/>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
