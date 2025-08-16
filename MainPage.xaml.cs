@@ -1,15 +1,13 @@
-﻿using ServerMonitor.Models;
+﻿using Microsoft.Maui.Controls;
 using ServerMonitor.ViewModels;
 
 namespace ServerMonitor;
 
 public partial class MainPage : ContentPage
 {
-    public MainPage()
+    public MainPage(SensorViewModel viewModel)
     {
         InitializeComponent();
+        BindingContext = viewModel;
     }
-
-    public void Refresh(SensorData data) =>
-        (BindingContext as MainViewModel)?.UpdateData(data);
 }

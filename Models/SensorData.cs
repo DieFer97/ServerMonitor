@@ -1,10 +1,10 @@
-﻿namespace ServerMonitor.Models
+﻿namespace ServerMonitor.Models;
+
+public class SensorData
 {
-    public class SensorData
-    {
-        public DateTime TimeStamp { get; set; }
-        public double Temperature { get; set; }
-        public int Light { get; set; }
-        public bool Alarm { get; set; }
-    }
+    public int Id { get; set; }
+    public float Temperature { get; set; }
+    public int LightLevel { get; set; }
+    public bool IsAlarm { get; set; }
+    public DateTime Timestamp { get; set; }
 }

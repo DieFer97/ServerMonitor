@@ -1,27 +1,27 @@
-﻿using Microsoft.Extensions.Logging;
-using Microcharts.Maui;
+﻿using Microsoft.Extensions.DependencyInjection;
+using ServerMonitor.Services;
+using ServerMonitor.ViewModels;
 
-namespace ServerMonitor
+namespace ServerMonitor;
+
+public static class MauiProgram
 {
-    public static class MauiProgram
+    public static MauiApp CreateMauiApp()
     {
-        public static MauiApp CreateMauiApp()
-        {
-            var builder = MauiApp.CreateBuilder();
-            builder
-                .UseMauiApp<App>()
-                .UseMicrocharts()        // <── Registra el handler
-                .ConfigureFonts(fonts =>
-                {
-                    fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
-                    fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
-                });
+        var builder = MauiApp.CreateBuilder();
+        builder
+            .UseMauiApp<App>()
+            .ConfigureFonts(fonts =>
+            {
+                fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
+                fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
+            });
 
-#if DEBUG
-            builder.Logging.AddDebug();
-#endif
+        builder.Services.AddSingleton<HttpClient>();
+        builder.Services.AddSingleton<SensorService>();
+        builder.Services.AddSingleton<SensorViewModel>();
+        builder.Services.AddSingleton<MainPage>();
 
-            return builder.Build();
-        }
+        return builder.Build();
     }
 }
