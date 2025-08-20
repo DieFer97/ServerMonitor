@@ -9,8 +9,8 @@
              BackgroundColor="#F5F5F5"
              Padding="10">
 
-    <Grid RowDefinitions="Auto, Auto, *">
-        <!-- Header profesional y moderno con título -->
+    <Grid RowDefinitions="Auto,Auto,*,Auto">
+        <!-- Header -->
         <Label Grid.Row="0"
                Text="Monitoreo del Servidor"
                FontSize="28"
@@ -18,29 +18,27 @@
                FontFamily="Helvetica"
                HorizontalOptions="Center"
                TextColor="#212121"
-               Margin="0,10,0,10" />
+               Margin="0,10,0,10"/>
 
-        <!-- Filtro por fecha -->
+        <!-- Filtro fecha + nivel -->
         <Border Grid.Row="1"
                 Stroke="#BDBDBD"
                 StrokeThickness="1"
                 StrokeShape="RoundRectangle 12"
                 BackgroundColor="White"
                 Padding="15"
-                Margin="0,0,0,20"
-                HorizontalOptions="Fill">
+                Margin="0,0,0,20">
             <VerticalStackLayout Spacing="10">
-                <Label Text="Filtrar por Fecha" 
-                       FontAttributes="Bold" 
-                       TextColor="#424242" 
-                       HorizontalOptions="Center" />
-                <Grid ColumnDefinitions="*, Auto, *" ColumnSpacing="10">
+                <Label Text="Filtrar por Fecha y Nivel" FontAttributes="Bold" TextColor="#424242" HorizontalOptions="Center"/>
+
+                <!-- Fechas -->
+                <Grid ColumnDefinitions="*,Auto,*" ColumnSpacing="10">
                     <VerticalStackLayout Grid.Column="0">
-                        <Label Text="Fecha Inicio" FontSize="12" TextColor="#666666" />
-                        <DatePicker x:Name="StartDatePicker" 
-                                   Date="{Binding StartDate}"
-                                   BackgroundColor="#F0F0F0"
-                                   TextColor="#212121" />
+                        <Label Text="Fecha Inicio" FontSize="12" TextColor="#666666"/>
+                        <DatePicker Date="{Binding StartDate}"
+                                    MaximumDate="{Binding EndDate}"
+                                    BackgroundColor="#F0F0F0"
+                                    TextColor="#212121"/>
                     </VerticalStackLayout>
 
                     <Button Grid.Column="1"
@@ -49,107 +47,94 @@
                             BackgroundColor="#2196F3"
                             TextColor="White"
                             CornerRadius="8"
-                            FontAttributes="Bold"
-                            FontSize="14"
-                            Padding="20,8"
-                            VerticalOptions="End" />
+                            Padding="15,8"
+                            VerticalOptions="End"/>
 
                     <VerticalStackLayout Grid.Column="2">
-                        <Label Text="Fecha Fin" FontSize="12" TextColor="#666666" />
-                        <DatePicker x:Name="EndDatePicker" 
-                                   Date="{Binding EndDate}"
-                                   BackgroundColor="#F0F0F0"
-                                   TextColor="#212121" />
+                        <Label Text="Fecha Fin" FontSize="12" TextColor="#666666"/>
+                        <DatePicker Date="{Binding EndDate}"
+                                    MinimumDate="{Binding StartDate}"
+                                    BackgroundColor="#F0F0F0"
+                                    TextColor="#212121"/>
                     </VerticalStackLayout>
                 </Grid>
+
+                <!-- Nivel -->
+                <HorizontalStackLayout HorizontalOptions="Center" Spacing="10">
+                    <Label Text="Nivel:" VerticalOptions="Center" FontAttributes="Bold"/>
+                    <Picker ItemsSource="{Binding Levels}"
+                            SelectedItem="{Binding SelectedLevel}"
+                            WidthRequest="120"/>
+                </HorizontalStackLayout>
             </VerticalStackLayout>
         </Border>
 
-        <!-- Sección de tabla, envuelta en ScrollView para responsividad -->
+        <!-- Tabla paginada -->
         <ScrollView Grid.Row="2">
             <VerticalStackLayout Spacing="10">
-                <!-- Encabezados de tabla con estilo moderno e iconos -->
+                <!-- Encabezados -->
                 <Border Stroke="#BDBDBD"
                         StrokeThickness="1"
                         StrokeShape="RoundRectangle 12"
                         BackgroundColor="#EEEEEE"
                         Padding="12"
                         HorizontalOptions="Fill">
-                    <Grid ColumnDefinitions="*,*,*,*"
-                          ColumnSpacing="10">
-
-                        <!-- Temperatura con icono -->
+                    <Grid ColumnDefinitions="*,*,*,*">
                         <VerticalStackLayout Grid.Column="0" HorizontalOptions="Center" Spacing="3">
-                            <Label Text="🌡️" FontSize="20" HorizontalOptions="Center" />
-                            <Label Text="Temp." FontAttributes="Bold" TextColor="#424242" HorizontalOptions="Center" FontSize="13" />
+                            <Label Text="🌡️" FontSize="20" HorizontalOptions="Center"/>
+                            <Label Text="Temp." FontAttributes="Bold" TextColor="#424242" FontSize="13"/>
                         </VerticalStackLayout>
-
-                        <!-- Nivel de Luz con icono -->
                         <VerticalStackLayout Grid.Column="1" HorizontalOptions="Center" Spacing="3">
-                            <Label Text="💡" FontSize="20" HorizontalOptions="Center" />
-                            <Label Text="Luz" FontAttributes="Bold" TextColor="#424242" HorizontalOptions="Center" FontSize="13" />
+                            <Label Text="💡" FontSize="20" HorizontalOptions="Center"/>
+                            <Label Text="Luz" FontAttributes="Bold" TextColor="#424242" FontSize="13"/>
                         </VerticalStackLayout>
-
-                        <!-- Alarma con icono -->
                         <VerticalStackLayout Grid.Column="2" HorizontalOptions="Center" Spacing="3">
-                            <Label Text="🔔" FontSize="20" HorizontalOptions="Center" />
-                            <Label Text="Alarma" FontAttributes="Bold" TextColor="#424242" HorizontalOptions="Center" FontSize="13" />
+                            <Label Text="🔔" FontSize="20" HorizontalOptions="Center"/>
+                            <Label Text="Alarma" FontAttributes="Bold" TextColor="#424242" FontSize="13"/>
                         </VerticalStackLayout>
-
-                        <!-- Hora con icono -->
                         <VerticalStackLayout Grid.Column="3" HorizontalOptions="Center" Spacing="3">
-                            <Label Text="🕐" FontSize="20" HorizontalOptions="Center" />
-                            <Label Text="Fecha/Hora" FontAttributes="Bold" TextColor="#424242" HorizontalOptions="Center" FontSize="12" />
+                            <Label Text="🕐" FontSize="20" HorizontalOptions="Center"/>
+                            <Label Text="Fecha" FontAttributes="Bold" TextColor="#424242" FontSize="12"/>
                         </VerticalStackLayout>
                     </Grid>
                 </Border>
 
-                <!-- CollectionView para el cuerpo de la tabla, con filas como cards innovadoras -->
-                <CollectionView ItemsSource="{Binding FilteredSensorData}"
+                <CollectionView ItemsSource="{Binding PagedData}"
                                 SelectionMode="None">
                     <CollectionView.ItemTemplate>
                         <DataTemplate x:DataType="models:SensorData">
                             <Border Stroke="#E0E0E0"
                                     StrokeThickness="1"
                                     StrokeShape="RoundRectangle 12"
-                                    BackgroundColor="{Binding IsAlarm, Converter={StaticResource BoolToColorConverter}, ConverterParameter=0.9}"
+                                    BackgroundColor="{Binding IsAlarm, Converter={StaticResource BoolToColorConverter}}"
                                     Padding="12"
                                     Margin="0,0,0,10"
                                     HorizontalOptions="Fill">
-                                <Grid ColumnDefinitions="*,*,*,*"
-                                      ColumnSpacing="10">
-
-                                    <!-- Temperatura sin icono -->
+                                <Grid ColumnDefinitions="*,*,*,*">
                                     <Label Grid.Column="0"
-                                           Text="{Binding Temperature, StringFormat='{0:F1} °C'}" 
-                                           TextColor="White" 
-                                           FontSize="14" 
+                                           Text="{Binding Temperature, StringFormat='{0:F1} °C'}"
+                                           TextColor="White"
+                                           FontSize="14"
                                            HorizontalOptions="Center"
-                                           FontAttributes="Bold" />
-
-                                    <!-- Nivel de Luz sin icono -->
+                                           FontAttributes="Bold"/>
                                     <Label Grid.Column="1"
-                                           Text="{Binding LightLevel}" 
-                                           TextColor="White" 
-                                           FontSize="14" 
+                                           Text="{Binding LightLevel}"
+                                           TextColor="White"
+                                           FontSize="14"
                                            HorizontalOptions="Center"
-                                           FontAttributes="Bold" />
-
-                                    <!-- Alarma sin icono, texto "SI/NO" en blanco -->
+                                           FontAttributes="Bold"/>
                                     <Label Grid.Column="2"
-                                           Text="{Binding IsAlarm, Converter={StaticResource BoolToStringConverter}}" 
-                                           TextColor="White" 
-                                           FontSize="14" 
+                                           Text="{Binding IsAlarm, Converter={StaticResource BoolToStringConverter}}"
+                                           TextColor="White"
+                                           FontSize="14"
                                            HorizontalOptions="Center"
-                                           FontAttributes="Bold" />
-
-                                    <!-- Timestamp con formato más compacto -->
+                                           FontAttributes="Bold"/>
                                     <Label Grid.Column="3"
-                                           Text="{Binding Timestamp, StringFormat='{0:MM-dd HH:mm}'}"
+                                           Text="{Binding Timestamp, StringFormat='{0:dd-MM-yyyy}'}"
                                            TextColor="White"
                                            FontSize="12"
                                            HorizontalOptions="Center"
-                                           FontAttributes="Bold" />
+                                           FontAttributes="Bold"/>
                                 </Grid>
                             </Border>
                         </DataTemplate>
@@ -157,13 +142,21 @@
                 </CollectionView>
             </VerticalStackLayout>
         </ScrollView>
+
+        <!-- Paginación -->
+        <Grid Grid.Row="4" ColumnDefinitions="*,Auto,Auto,*" Margin="0,10">
+            <Button Grid.Column="1" Text="⬅ Anterior" Command="{Binding PreviousPageCommand}"
+                    IsEnabled="{Binding HasPreviousPage}"/>
+            <Label Grid.Column="2" Text="{Binding PageInfo}" VerticalOptions="Center" Margin="10,0"/>
+            <Button Grid.Column="3" Text="Siguiente ➡" Command="{Binding NextPageCommand}"
+                    IsEnabled="{Binding HasNextPage}"/>
+        </Grid>
     </Grid>
 
-    <!-- Recursos para convertidores -->
     <ContentPage.Resources>
         <ResourceDictionary>
-            <local:BoolToColorConverter x:Key="BoolToColorConverter" />
-            <local:BoolToStringConverter x:Key="BoolToStringConverter" />
+            <local:BoolToColorConverter x:Key="BoolToColorConverter"/>
+            <local:BoolToStringConverter x:Key="BoolToStringConverter"/>
         </ResourceDictionary>
     </ContentPage.Resources>
 </ContentPage>

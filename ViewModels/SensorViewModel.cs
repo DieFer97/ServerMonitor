@@ -3,96 +3,80 @@ using CommunityToolkit.Mvvm.Input;
 using ServerMonitor.Models;
 using ServerMonitor.Services;
 using System.Collections.ObjectModel;
+
 namespace ServerMonitor.ViewModels;
+
 public partial class SensorViewModel : ObservableObject
 {
     private readonly SensorService _sensorService;
-    // PROPIEDADES ORIGINALES - NO MODIFICADAS
-    [ObservableProperty]
-    private List<SensorData> _sensorData;
-    // NUEVAS PROPIEDADES AGREGADAS PARA EL FILTRO
-    [ObservableProperty]
-    private ObservableCollection<SensorData> _filteredSensorData;
-    [ObservableProperty]
-    private DateTime _startDate;
-    [ObservableProperty]
-    private DateTime _endDate;
+
+    [ObservableProperty] private List<SensorData> _sensorData = new();
+    [ObservableProperty] private ObservableCollection<SensorData> _pagedData = new();
+    [ObservableProperty] private DateTime _startDate;
+    [ObservableProperty] private DateTime _endDate;
+    [ObservableProperty] private bool _isBusy;
+    [ObservableProperty] private int _currentPage = 1;
+    [ObservableProperty] private string _selectedLevel = "Normales";
+    private const int PageSize = 5;
+
+    public IEnumerable<string> Levels => new[] { "Normales", "Críticos" };
+
+    public bool HasPreviousPage => CurrentPage > 1;
+    public bool HasNextPage => CurrentPage * PageSize < FilteredCount;
+    public string PageInfo => $"Pág. {CurrentPage}";
+
+    private List<SensorData> FilteredData = new();
+    private int FilteredCount => FilteredData.Count;
+
     public SensorViewModel(SensorService sensorService)
     {
-        // CÓDIGO ORIGINAL - NO MODIFICADO
         _sensorService = sensorService;
-        _sensorData = new List<SensorData>();
-        // NUEVAS INICIALIZACIONES AGREGADAS
-        _filteredSensorData = new ObservableCollection<SensorData>();
-        // Inicializar con un rango más amplio para mostrar todos los datos
-        _endDate = DateTime.Now.AddDays(1); // Un día en el futuro para asegurar que incluye hoy
-        _startDate = DateTime.Now.AddDays(-365); // Un año atrás para mostrar todos los datos
-        // CÓDIGO ORIGINAL - NO MODIFICADO
+        _startDate = new DateTime(2025, 8, 16);
+        _endDate = DateTime.Now.Date;
         LoadDataCommand.Execute(null);
     }
-    // MÉTODO ORIGINAL - NO MODIFICADO
+
     [RelayCommand]
     private async Task LoadData()
     {
-        SensorData = await _sensorService.GetSensorDataAsync();
-        // NUEVA FUNCIONALIDAD AGREGADA - Solo se ejecuta si hay datos filtrados
-        if (FilteredSensorData != null)
-        {
-            UpdateFilteredData();
-        }
+        IsBusy = true;
+        var data = await Task.Run(() => _sensorService.GetSensorDataAsync());
+        SensorData = data ?? new List<SensorData>();
+        FilterByDateCommand.Execute(null);
+        IsBusy = false;
     }
-    // NUEVO MÉTODO AGREGADO PARA EL FILTRO
+
     [RelayCommand]
     private void FilterByDate()
     {
-        UpdateFilteredData();
+        var query = SensorData
+            .Where(s => s.Timestamp >= StartDate.Date && s.Timestamp < EndDate.Date.AddDays(1));
+
+        if (SelectedLevel == "Críticos")
+            query = query.Where(s => s.IsAlarm);
+        else
+            query = query.Where(s => !s.IsAlarm);
+
+        FilteredData = query.OrderByDescending(x => x.Timestamp).ToList();
+        CurrentPage = 1;
+        RefreshPage();
     }
-    // MÉTODO PRIVADO PARA MANEJAR LA LÓGICA DE FILTRADO
-    private void UpdateFilteredData()
+
+    [RelayCommand] private void NextPage() { if (HasNextPage) { CurrentPage++; RefreshPage(); } }
+    [RelayCommand] private void PreviousPage() { if (HasPreviousPage) { CurrentPage--; RefreshPage(); } }
+
+    private void RefreshPage()
     {
-        if (SensorData == null || FilteredSensorData == null) return;
-        // Si no hay fechas válidas, mostrar todos los datos
-        if (StartDate == default || EndDate == default)
+        var paged = FilteredData
+            .Skip((CurrentPage - 1) * PageSize)
+            .Take(PageSize);
+        MainThread.BeginInvokeOnMainThread(() =>
         {
-            FilteredSensorData.Clear();
-            foreach (var item in SensorData)
-            {
-                FilteredSensorData.Add(item);
-            }
-            return;
-        }
-        var filteredData = SensorData.Where(sensor =>
-            sensor.Timestamp.Date >= StartDate.Date &&
-            sensor.Timestamp.Date <= EndDate.Date)
-            .OrderByDescending(x => x.Timestamp) // Ordenar por fecha descendente
-            .ToList();
-        FilteredSensorData.Clear();
-        foreach (var item in filteredData)
-        {
-            FilteredSensorData.Add(item);
-        }
-        // Si no hay datos filtrados, mostrar todos los datos disponibles
-        if (FilteredSensorData.Count == 0 && SensorData.Count > 0)
-        {
-            foreach (var item in SensorData.OrderByDescending(x => x.Timestamp))
-            {
-                FilteredSensorData.Add(item);
-            }
-        }
-    }
-    // MÉTODOS OPCIONALES - Se ejecutan solo si las fechas cambian
-    partial void OnStartDateChanged(DateTime value)
-    {
-        if (FilteredSensorData != null && SensorData != null && SensorData.Count > 0)
-        {
-            UpdateFilteredData();
-        }
-    }
-    partial void OnEndDateChanged(DateTime value)
-    {
-        if (FilteredSensorData != null && SensorData != null && SensorData.Count > 0)
-        {
-            UpdateFilteredData();
-        }
+            PagedData.Clear();
+            foreach (var item in paged) PagedData.Add(item);
+            OnPropertyChanged(nameof(HasPreviousPage));
+            OnPropertyChanged(nameof(HasNextPage));
+            OnPropertyChanged(nameof(PageInfo));
+        });
     }
 }
