@@ -13,16 +13,22 @@ public class SensorService
         _httpClient = httpClient;
     }
 
-    public async Task<List<SensorData>> GetSensorDataAsync()
+    public async Task<List<SensorData>> GetSensorDataAsync(DateTime? fecha = null)
     {
         try
         {
-            var response = await _httpClient.GetFromJsonAsync<List<SensorData>>(ApiUrl);
+            var url = ApiUrl;
+            if (fecha.HasValue)
+                url += $"?fecha={fecha.Value:yyyy-MM-dd}&limit=500";
+            else
+                url += "?limit=500";
+
+            var response = await _httpClient.GetFromJsonAsync<List<SensorData>>(url);
             return response ?? new List<SensorData>();
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error al obtener datos de sensores: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
             return new List<SensorData>();
         }
     }
