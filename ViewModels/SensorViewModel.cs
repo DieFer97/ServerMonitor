@@ -17,7 +17,7 @@ public partial class SensorViewModel : ObservableObject
     [ObservableProperty] private int _currentPage = 1;
     [ObservableProperty] private string _selectedLevel = "Normales";
 
-    private const int PageSize = 5;
+    private const int PageSize = 7;
     private List<SensorData> _filteredData = new();
     private int FilteredCount => _filteredData.Count;
 

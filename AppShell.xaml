@@ -7,9 +7,12 @@
     Shell.FlyoutBehavior="Disabled"
     Title="ServerMonitor">
 
-    <ShellContent
-        Title="Home"
-        ContentTemplate="{DataTemplate local:MainPage}"
-        Route="MainPage" />
+    <TabBar>
+        <Tab Title="Monitor" Icon="logo_login.png">
+            <ShellContent
+                ContentTemplate="{DataTemplate local:MainPage}"
+                Route="MainPage" />
+        </Tab>
+    </TabBar>
 
 </Shell>

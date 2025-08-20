@@ -6,20 +6,30 @@
              xmlns:local="clr-namespace:ServerMonitor"
              x:Class="ServerMonitor.MainPage"
              x:DataType="vm:SensorViewModel"
-             BackgroundColor="#F5F5F5"
+             BackgroundColor="LightGray"
              Padding="10">
-    <Grid RowDefinitions="Auto,Auto,*,Auto">
-        <!-- Header -->
-        <Label Grid.Row="0"
+
+    <Grid RowDefinitions="Auto,Auto,Auto,*,Auto,Auto">
+
+        <!-- Logo centrado -->
+        <Image Grid.Row="0"
+               Source="logo.png"
+               HeightRequest="50"
+               HorizontalOptions="Center"
+               Margin="0,-5,0,0"/>
+
+        <!-- Título principal -->
+        <Label Grid.Row="1"
                Text="Monitoreo del Servidor"
                FontSize="28"
                FontAttributes="Bold"
                FontFamily="verdana"
                HorizontalOptions="Center"
                TextColor="#212121"
-               Margin="0,10,0,10"/>
+               Margin="0,15,0,10"/>
+
         <!-- Filtro fecha + nivel -->
-        <Border Grid.Row="1"
+        <Border Grid.Row="2"
                 Stroke="#BDBDBD"
                 StrokeThickness="1"
                 StrokeShape="RoundRectangle 12"
@@ -28,18 +38,16 @@
                 Margin="0,0,0,20">
             <VerticalStackLayout Spacing="10">
                 <Label Text="Filtrar por Fecha y Niveles" FontAttributes="Bold" FontFamily="times" HorizontalOptions="Center"/>
-                <!-- Fecha única -->
                 <Grid ColumnDefinitions="*,Auto,*" ColumnSpacing="10">
                     <VerticalStackLayout Grid.Column="0">
                         <Label Text="Fecha" VerticalOptions="Center" FontFamily="times" FontAttributes="Bold"/>
-                        <DatePicker Date="{Binding SelectedDate}"
-                                    TextColor="#212121"/>
+                        <DatePicker Date="{Binding SelectedDate}" TextColor="#212121"/>
                     </VerticalStackLayout>
                     <Button Grid.Column="1"
                             Text="Filtrar"
                             Command="{Binding FilterByDateCommand}"
-                            BackgroundColor="#2196F3"
-                            TextColor="black"
+                            BackgroundColor="#4d62da"
+                            TextColor="White"
                             CornerRadius="8"
                             FontFamily="verdana"
                             Padding="15,8"
@@ -53,14 +61,14 @@
                 </Grid>
             </VerticalStackLayout>
         </Border>
+
         <!-- Tabla paginada -->
-        <ScrollView Grid.Row="2">
+        <ScrollView Grid.Row="3">
             <VerticalStackLayout Spacing="10">
-                <!-- Encabezados -->
                 <Border Stroke="#BDBDBD"
                         StrokeThickness="1"
                         StrokeShape="RoundRectangle 12"
-                        BackgroundColor="#EEEEEE"
+                        BackgroundColor="White"
                         Padding="12"
                         HorizontalOptions="Fill">
                     <Grid ColumnDefinitions="*,*,*,*">
@@ -82,8 +90,8 @@
                         </VerticalStackLayout>
                     </Grid>
                 </Border>
-                <CollectionView ItemsSource="{Binding PagedData}"
-                                SelectionMode="None">
+
+                <CollectionView ItemsSource="{Binding PagedData}" SelectionMode="None">
                     <CollectionView.ItemTemplate>
                         <DataTemplate x:DataType="models:SensorData">
                             <Border Stroke="#E0E0E0"
@@ -129,15 +137,17 @@
                 </CollectionView>
             </VerticalStackLayout>
         </ScrollView>
+
         <!-- Paginación -->
-        <Grid Grid.Row="3" ColumnDefinitions="*,Auto,Auto,*" Margin="0,10">
-            <Button Grid.Column="1" Text="⬅ Anterior" BackgroundColor="#2196F3" Command="{Binding PreviousPageCommand}"
+        <Grid Grid.Row="4" ColumnDefinitions="*,Auto,Auto,*" Margin="0,10">
+            <Button Grid.Column="1" Text="⬅ Anterior" TextColor="White" BackgroundColor="#4d62da" Command="{Binding PreviousPageCommand}"
                     IsEnabled="{Binding HasPreviousPage}"/>
             <Label Grid.Column="2" Text="{Binding PageInfo}" VerticalOptions="Center" Margin="10,0"/>
-            <Button Grid.Column="3" Text="Siguiente ➡" BackgroundColor="#2196F3" Command="{Binding NextPageCommand}"
+            <Button Grid.Column="3" Text="Siguiente ➡" TextColor="White" BackgroundColor="#4d62da" Command="{Binding NextPageCommand}"
                     IsEnabled="{Binding HasNextPage}"/>
         </Grid>
     </Grid>
+
     <ContentPage.Resources>
         <ResourceDictionary>
             <local:BoolToColorConverter x:Key="BoolToColorConverter"/>
