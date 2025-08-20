@@ -3,22 +3,167 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:ServerMonitor.ViewModels"
              xmlns:models="clr-namespace:ServerMonitor.Models"
+             xmlns:local="clr-namespace:ServerMonitor"
              x:Class="ServerMonitor.MainPage"
-             x:DataType="vm:SensorViewModel">
-    <VerticalStackLayout>
-        <Button Text="Refrescar Datos"
-                Command="{Binding LoadDataCommand}" />
-        <CollectionView ItemsSource="{Binding SensorData}">
-            <CollectionView.ItemTemplate>
-                <DataTemplate x:DataType="models:SensorData">
-                    <HorizontalStackLayout Padding="10">
-                        <Label Text="{Binding Temperature, StringFormat='Temp: {0:F1} °C'}" />
-                        <Label Text="{Binding LightLevel, StringFormat='Luz: {0}'}" />
-                        <Label Text="{Binding IsAlarm, StringFormat='Alarma: {0}'}" />
-                        <Label Text="{Binding Timestamp, StringFormat='Hora: {0:yyyy-MM-dd HH:mm:ss}'}" />
-                    </HorizontalStackLayout>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
-    </VerticalStackLayout>
+             x:DataType="vm:SensorViewModel"
+             BackgroundColor="#F5F5F5"
+             Padding="10">
+
+    <Grid RowDefinitions="Auto, Auto, *">
+        <!-- Header profesional y moderno con título -->
+        <Label Grid.Row="0"
+               Text="Monitoreo del Servidor"
+               FontSize="28"
+               FontAttributes="Bold"
+               FontFamily="Helvetica"
+               HorizontalOptions="Center"
+               TextColor="#212121"
+               Margin="0,10,0,10" />
+
+        <!-- Filtro por fecha -->
+        <Border Grid.Row="1"
+                Stroke="#BDBDBD"
+                StrokeThickness="1"
+                StrokeShape="RoundRectangle 12"
+                BackgroundColor="White"
+                Padding="15"
+                Margin="0,0,0,20"
+                HorizontalOptions="Fill">
+            <VerticalStackLayout Spacing="10">
+                <Label Text="Filtrar por Fecha" 
+                       FontAttributes="Bold" 
+                       TextColor="#424242" 
+                       HorizontalOptions="Center" />
+                <Grid ColumnDefinitions="*, Auto, *" ColumnSpacing="10">
+                    <VerticalStackLayout Grid.Column="0">
+                        <Label Text="Fecha Inicio" FontSize="12" TextColor="#666666" />
+                        <DatePicker x:Name="StartDatePicker" 
+                                   Date="{Binding StartDate}"
+                                   BackgroundColor="#F0F0F0"
+                                   TextColor="#212121" />
+                    </VerticalStackLayout>
+
+                    <Button Grid.Column="1"
+                            Text="Filtrar"
+                            Command="{Binding FilterByDateCommand}"
+                            BackgroundColor="#2196F3"
+                            TextColor="White"
+                            CornerRadius="8"
+                            FontAttributes="Bold"
+                            FontSize="14"
+                            Padding="20,8"
+                            VerticalOptions="End" />
+
+                    <VerticalStackLayout Grid.Column="2">
+                        <Label Text="Fecha Fin" FontSize="12" TextColor="#666666" />
+                        <DatePicker x:Name="EndDatePicker" 
+                                   Date="{Binding EndDate}"
+                                   BackgroundColor="#F0F0F0"
+                                   TextColor="#212121" />
+                    </VerticalStackLayout>
+                </Grid>
+            </VerticalStackLayout>
+        </Border>
+
+        <!-- Sección de tabla, envuelta en ScrollView para responsividad -->
+        <ScrollView Grid.Row="2">
+            <VerticalStackLayout Spacing="10">
+                <!-- Encabezados de tabla con estilo moderno e iconos -->
+                <Border Stroke="#BDBDBD"
+                        StrokeThickness="1"
+                        StrokeShape="RoundRectangle 12"
+                        BackgroundColor="#EEEEEE"
+                        Padding="12"
+                        HorizontalOptions="Fill">
+                    <Grid ColumnDefinitions="*,*,*,*"
+                          ColumnSpacing="10">
+
+                        <!-- Temperatura con icono -->
+                        <VerticalStackLayout Grid.Column="0" HorizontalOptions="Center" Spacing="3">
+                            <Label Text="🌡️" FontSize="20" HorizontalOptions="Center" />
+                            <Label Text="Temp." FontAttributes="Bold" TextColor="#424242" HorizontalOptions="Center" FontSize="13" />
+                        </VerticalStackLayout>
+
+                        <!-- Nivel de Luz con icono -->
+                        <VerticalStackLayout Grid.Column="1" HorizontalOptions="Center" Spacing="3">
+                            <Label Text="💡" FontSize="20" HorizontalOptions="Center" />
+                            <Label Text="Luz" FontAttributes="Bold" TextColor="#424242" HorizontalOptions="Center" FontSize="13" />
+                        </VerticalStackLayout>
+
+                        <!-- Alarma con icono -->
+                        <VerticalStackLayout Grid.Column="2" HorizontalOptions="Center" Spacing="3">
+                            <Label Text="🔔" FontSize="20" HorizontalOptions="Center" />
+                            <Label Text="Alarma" FontAttributes="Bold" TextColor="#424242" HorizontalOptions="Center" FontSize="13" />
+                        </VerticalStackLayout>
+
+                        <!-- Hora con icono -->
+                        <VerticalStackLayout Grid.Column="3" HorizontalOptions="Center" Spacing="3">
+                            <Label Text="🕐" FontSize="20" HorizontalOptions="Center" />
+                            <Label Text="Fecha/Hora" FontAttributes="Bold" TextColor="#424242" HorizontalOptions="Center" FontSize="12" />
+                        </VerticalStackLayout>
+                    </Grid>
+                </Border>
+
+                <!-- CollectionView para el cuerpo de la tabla, con filas como cards innovadoras -->
+                <CollectionView ItemsSource="{Binding FilteredSensorData}"
+                                SelectionMode="None">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="models:SensorData">
+                            <Border Stroke="#E0E0E0"
+                                    StrokeThickness="1"
+                                    StrokeShape="RoundRectangle 12"
+                                    BackgroundColor="{Binding IsAlarm, Converter={StaticResource BoolToColorConverter}, ConverterParameter=0.9}"
+                                    Padding="12"
+                                    Margin="0,0,0,10"
+                                    HorizontalOptions="Fill">
+                                <Grid ColumnDefinitions="*,*,*,*"
+                                      ColumnSpacing="10">
+
+                                    <!-- Temperatura sin icono -->
+                                    <Label Grid.Column="0"
+                                           Text="{Binding Temperature, StringFormat='{0:F1} °C'}" 
+                                           TextColor="White" 
+                                           FontSize="14" 
+                                           HorizontalOptions="Center"
+                                           FontAttributes="Bold" />
+
+                                    <!-- Nivel de Luz sin icono -->
+                                    <Label Grid.Column="1"
+                                           Text="{Binding LightLevel}" 
+                                           TextColor="White" 
+                                           FontSize="14" 
+                                           HorizontalOptions="Center"
+                                           FontAttributes="Bold" />
+
+                                    <!-- Alarma sin icono, texto "SI/NO" en blanco -->
+                                    <Label Grid.Column="2"
+                                           Text="{Binding IsAlarm, Converter={StaticResource BoolToStringConverter}}" 
+                                           TextColor="White" 
+                                           FontSize="14" 
+                                           HorizontalOptions="Center"
+                                           FontAttributes="Bold" />
+
+                                    <!-- Timestamp con formato más compacto -->
+                                    <Label Grid.Column="3"
+                                           Text="{Binding Timestamp, StringFormat='{0:MM-dd HH:mm}'}"
+                                           TextColor="White"
+                                           FontSize="12"
+                                           HorizontalOptions="Center"
+                                           FontAttributes="Bold" />
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
+
+    <!-- Recursos para convertidores -->
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <local:BoolToColorConverter x:Key="BoolToColorConverter" />
+            <local:BoolToStringConverter x:Key="BoolToStringConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
 </ContentPage>
