@@ -12,68 +12,108 @@ public partial class SensorViewModel : ObservableObject
 
     [ObservableProperty] private List<SensorData> _sensorData = new();
     [ObservableProperty] private ObservableCollection<SensorData> _pagedData = new();
-    [ObservableProperty] private DateTime _startDate;
-    [ObservableProperty] private DateTime _endDate;
+    [ObservableProperty] private DateTime _selectedDate;
     [ObservableProperty] private bool _isBusy;
     [ObservableProperty] private int _currentPage = 1;
     [ObservableProperty] private string _selectedLevel = "Normales";
+
     private const int PageSize = 5;
+    private List<SensorData> _filteredData = new();
+    private int FilteredCount => _filteredData.Count;
 
     public IEnumerable<string> Levels => new[] { "Normales", "Críticos" };
-
     public bool HasPreviousPage => CurrentPage > 1;
     public bool HasNextPage => CurrentPage * PageSize < FilteredCount;
     public string PageInfo => $"Pág. {CurrentPage}";
 
-    private List<SensorData> FilteredData = new();
-    private int FilteredCount => FilteredData.Count;
-
     public SensorViewModel(SensorService sensorService)
     {
         _sensorService = sensorService;
-        _startDate = new DateTime(2025, 8, 16);
-        _endDate = DateTime.Now.Date;
-        LoadDataCommand.Execute(null);
+        _selectedDate = DateTime.Now.Date;
+
+        // Diferir la carga inicial
+        _ = Task.Run(async () => await LoadDataAsync());
     }
 
     [RelayCommand]
     private async Task LoadData()
     {
-        IsBusy = true;
-        var data = await Task.Run(() => _sensorService.GetSensorDataAsync());
-        SensorData = data ?? new List<SensorData>();
-        FilterByDateCommand.Execute(null);
-        IsBusy = false;
+        await LoadDataAsync();
+    }
+
+    private async Task LoadDataAsync()
+    {
+        try
+        {
+            IsBusy = true;
+            var data = await Task.Run(() => _sensorService.GetSensorDataAsync());
+            SensorData = data ?? new List<SensorData>();
+            FilterByDateCommand.Execute(null);
+        }
+        catch (Exception ex)
+        {
+            // Log del error o manejo según sea necesario
+            System.Diagnostics.Debug.WriteLine($"Error cargando datos: {ex.Message}");
+            SensorData = new List<SensorData>();
+        }
+        finally
+        {
+            IsBusy = false;
+        }
     }
 
     [RelayCommand]
     private void FilterByDate()
     {
+        // Usar rango de fechas para ser más preciso
+        var startOfDay = SelectedDate.Date;
+        var endOfDay = SelectedDate.Date.AddDays(1);
+
         var query = SensorData
-            .Where(s => s.Timestamp >= StartDate.Date && s.Timestamp < EndDate.Date.AddDays(1));
+            .Where(s => s.Timestamp >= startOfDay && s.Timestamp < endOfDay);
 
         if (SelectedLevel == "Críticos")
             query = query.Where(s => s.IsAlarm);
         else
             query = query.Where(s => !s.IsAlarm);
 
-        FilteredData = query.OrderByDescending(x => x.Timestamp).ToList();
+        _filteredData = query.OrderByDescending(x => x.Timestamp).ToList();
         CurrentPage = 1;
         RefreshPage();
     }
 
-    [RelayCommand] private void NextPage() { if (HasNextPage) { CurrentPage++; RefreshPage(); } }
-    [RelayCommand] private void PreviousPage() { if (HasPreviousPage) { CurrentPage--; RefreshPage(); } }
+    [RelayCommand]
+    private void NextPage()
+    {
+        if (HasNextPage)
+        {
+            CurrentPage++;
+            RefreshPage();
+        }
+    }
+
+    [RelayCommand]
+    private void PreviousPage()
+    {
+        if (HasPreviousPage)
+        {
+            CurrentPage--;
+            RefreshPage();
+        }
+    }
 
     private void RefreshPage()
     {
-        var paged = FilteredData
+        var paged = _filteredData
             .Skip((CurrentPage - 1) * PageSize)
             .Take(PageSize);
+
         MainThread.BeginInvokeOnMainThread(() =>
         {
             PagedData.Clear();
-            foreach (var item in paged) PagedData.Add(item);
+            foreach (var item in paged)
+                PagedData.Add(item);
+
             OnPropertyChanged(nameof(HasPreviousPage));
             OnPropertyChanged(nameof(HasNextPage));
             OnPropertyChanged(nameof(PageInfo));
