@@ -10,13 +10,7 @@
 
     <Grid RowDefinitions="Auto,Auto,Auto,*">
 
-        <Image Grid.Row="0"
-               Source="logo.png"
-               HeightRequest="50"
-               HorizontalOptions="Center"
-               Margin="0,-5,0,0"/>
-
-        <Label Grid.Row="1"
+        <Label Grid.Row="0"
                Text="Gráficos del Servidor"
                FontSize="28"
                FontAttributes="Bold"
@@ -25,7 +19,7 @@
                TextColor="#212121"
                Margin="0,15,0,10"/>
 
-        <Border Grid.Row="2"
+        <Border Grid.Row="1"
                 Stroke="#BDBDBD"
                 StrokeThickness="1"
                 StrokeShape="RoundRectangle 12"
@@ -33,7 +27,7 @@
                 Padding="15"
                 Margin="0,0,0,20">
             <VerticalStackLayout Spacing="10">
-                <Label Text="Filtrar por Fecha y Niveles" FontAttributes="Bold" FontFamily="times" HorizontalOptions="Center"/>
+                <Label Text="Filtrar por Sensor" FontAttributes="Bold" FontFamily="times" HorizontalOptions="Center"/>
                 <Grid ColumnDefinitions="*,Auto,*" ColumnSpacing="10">
                     <VerticalStackLayout Grid.Column="0">
                         <Label Text="Fecha" VerticalOptions="Center" FontFamily="times" FontAttributes="Bold"/>
@@ -49,25 +43,25 @@
                             Padding="15,8"
                             VerticalOptions="End"/>
                     <VerticalStackLayout Grid.Column="2">
-                        <Label Text="Niveles:" VerticalOptions="Center" FontFamily="times" FontAttributes="Bold"/>
-                        <Picker ItemsSource="{Binding Levels}"
-                                SelectedItem="{Binding SelectedLevel}"
+                        <Label Text="Sensor:" VerticalOptions="Center" FontFamily="times" FontAttributes="Bold"/>
+                        <Picker ItemsSource="{Binding Sensors}"
+                                SelectedItem="{Binding SelectedSensor}"
                                 WidthRequest="120"/>
                     </VerticalStackLayout>
                 </Grid>
             </VerticalStackLayout>
         </Border>
 
-        <ScrollView Grid.Row="3">
+        <ScrollView Grid.Row="2">
             <Border Stroke="#BDBDBD"
-                    StrokeThickness="1"
-                    StrokeShape="RoundRectangle 12"
-                    BackgroundColor="White"
-                    Padding="12"
+                    StrokeThickness="2"
+                    StrokeShape="RoundRectangle 15"
+                    BackgroundColor="#FFFFFF"
+                    Padding="15"
                     Margin="0,0,0,10"
                     HorizontalOptions="Fill">
                 <microcharts:ChartView Chart="{Binding Chart}"
-                                       HeightRequest="400"
+                                       HeightRequest="450"
                                        HorizontalOptions="FillAndExpand"
                                        VerticalOptions="FillAndExpand"/>
             </Border>

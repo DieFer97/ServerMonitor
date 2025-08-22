@@ -7,32 +7,41 @@
     xmlns:vm="clr-namespace:ServerMonitor.ViewModels"
     Shell.FlyoutBehavior="Flyout"
     Shell.BackgroundColor="LightGray"
-    Shell.FlyoutBackgroundColor="LightGray"
+    Shell.FlyoutBackgroundColor="#2C3E50"
     Shell.FlyoutWidth="250">
 
     <!-- Barra de título personalizada con logo centrado, ícono de hamburguesa nativo -->
     <Shell.TitleView>
         <Grid ColumnDefinitions="Auto,*,Auto" VerticalOptions="Center">
-            <!-- Espacio reservado a la izquierda para el ícono de hamburguesa (manejado por Shell) -->
             <Label Grid.Column="0" WidthRequest="40"/>
-            <!-- Placeholder para alinear -->
-            <!-- Logo centrado -->
+            <!-- Placeholder para el ícono de hamburguesa -->
             <Image Grid.Column="1"
                    Source="logo.png"
                    HeightRequest="50"
                    HorizontalOptions="Center"
                    VerticalOptions="Center"/>
-            <!-- Espacio reservado a la derecha -->
             <Label Grid.Column="2" WidthRequest="40"/>
         </Grid>
     </Shell.TitleView>
 
-    <!-- Opciones del menú: DATOS y GRÁFICOS -->
+    <!-- Opciones del menú con estilo mejorado -->
     <FlyoutItem Title="DATOS" FlyoutDisplayOptions="AsSingleItem">
         <ShellContent Route="MainPage" ContentTemplate="{DataTemplate local:MainPage}"/>
     </FlyoutItem>
     <FlyoutItem Title="GRÁFICOS" FlyoutDisplayOptions="AsSingleItem">
         <ShellContent Route="GraphicsPage" ContentTemplate="{DataTemplate local:GraphicsPage}"/>
     </FlyoutItem>
+
+    <!-- Estilo del flyout -->
+    <Shell.FlyoutHeader>
+        <Grid BackgroundColor="#34495E" Padding="20" HeightRequest="100">
+            <Image Source="logo_login.png" HeightRequest="60" HorizontalOptions="Center" VerticalOptions="Center"/>
+        </Grid>
+    </Shell.FlyoutHeader>
+    <Shell.FlyoutFooter>
+        <Grid BackgroundColor="#34495E" Padding="20" HeightRequest="50">
+            <Label Text="v1.0 - 2025" FontSize="12" HorizontalOptions="Center" VerticalOptions="Center" TextColor="White"/>
+        </Grid>
+    </Shell.FlyoutFooter>
 
 </Shell>
