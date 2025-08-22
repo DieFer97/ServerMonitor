@@ -27,7 +27,7 @@
                 Padding="15"
                 Margin="0,0,0,20">
             <VerticalStackLayout Spacing="10">
-                <Label Text="Filtrar por Sensor" FontAttributes="Bold" FontFamily="times" HorizontalOptions="Center"/>
+                <Label Text="Filtrar por Fecha y Sensor" FontAttributes="Bold" FontFamily="times" HorizontalOptions="Center"/>
                 <Grid ColumnDefinitions="*,Auto,*" ColumnSpacing="10">
                     <VerticalStackLayout Grid.Column="0">
                         <Label Text="Fecha" VerticalOptions="Center" FontFamily="times" FontAttributes="Bold"/>
