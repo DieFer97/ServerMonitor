@@ -1,4 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Maui.Controls.Hosting;
+using Microcharts.Maui;
 using ServerMonitor.Services;
 using ServerMonitor.ViewModels;
 
@@ -11,6 +13,7 @@ public static class MauiProgram
         var builder = MauiApp.CreateBuilder();
         builder
             .UseMauiApp<App>()
+            .UseMicrocharts() // Soporte para Microcharts
             .ConfigureFonts(fonts =>
             {
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
@@ -22,6 +25,8 @@ public static class MauiProgram
         builder.Services.AddSingleton<SensorService>();
         builder.Services.AddSingleton<SensorViewModel>();
         builder.Services.AddSingleton<MainPage>();
+        builder.Services.AddSingleton<GraphicsViewModel>();
+        builder.Services.AddSingleton<GraphicsPage>();
 
         return builder.Build();
     }

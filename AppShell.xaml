@@ -4,15 +4,35 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:ServerMonitor"
-    Shell.FlyoutBehavior="Disabled"
-    Title="ServerMonitor">
+    xmlns:vm="clr-namespace:ServerMonitor.ViewModels"
+    Shell.FlyoutBehavior="Flyout"
+    Shell.BackgroundColor="LightGray"
+    Shell.FlyoutBackgroundColor="LightGray"
+    Shell.FlyoutWidth="250">
 
-    <TabBar>
-        <Tab Title="Monitor" Icon="logo_login.png">
-            <ShellContent
-                ContentTemplate="{DataTemplate local:MainPage}"
-                Route="MainPage" />
-        </Tab>
-    </TabBar>
+    <!-- Barra de título personalizada con logo centrado, ícono de hamburguesa nativo -->
+    <Shell.TitleView>
+        <Grid ColumnDefinitions="Auto,*,Auto" VerticalOptions="Center">
+            <!-- Espacio reservado a la izquierda para el ícono de hamburguesa (manejado por Shell) -->
+            <Label Grid.Column="0" WidthRequest="40"/>
+            <!-- Placeholder para alinear -->
+            <!-- Logo centrado -->
+            <Image Grid.Column="1"
+                   Source="logo.png"
+                   HeightRequest="50"
+                   HorizontalOptions="Center"
+                   VerticalOptions="Center"/>
+            <!-- Espacio reservado a la derecha -->
+            <Label Grid.Column="2" WidthRequest="40"/>
+        </Grid>
+    </Shell.TitleView>
+
+    <!-- Opciones del menú: DATOS y GRÁFICOS -->
+    <FlyoutItem Title="DATOS" FlyoutDisplayOptions="AsSingleItem">
+        <ShellContent Route="MainPage" ContentTemplate="{DataTemplate local:MainPage}"/>
+    </FlyoutItem>
+    <FlyoutItem Title="GRÁFICOS" FlyoutDisplayOptions="AsSingleItem">
+        <ShellContent Route="GraphicsPage" ContentTemplate="{DataTemplate local:GraphicsPage}"/>
+    </FlyoutItem>
 
 </Shell>

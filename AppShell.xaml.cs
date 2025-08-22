@@ -1,10 +1,13 @@
-﻿namespace ServerMonitor
+﻿using Microsoft.Maui.Controls;
+
+namespace ServerMonitor;
+
+public partial class AppShell : Shell
 {
-    public partial class AppShell : Shell
+    public AppShell()
     {
-        public AppShell()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
+        Routing.RegisterRoute(nameof(MainPage), typeof(MainPage));
+        Routing.RegisterRoute(nameof(GraphicsPage), typeof(GraphicsPage));
     }
 }
