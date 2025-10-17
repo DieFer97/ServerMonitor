@@ -31,7 +31,6 @@ public partial class SensorViewModel : ObservableObject
         _sensorService = sensorService;
         _selectedDate = DateTime.Now.Date;
 
-        // Diferir la carga inicial
         _ = Task.Run(async () => await LoadDataAsync());
     }
 
@@ -52,7 +51,6 @@ public partial class SensorViewModel : ObservableObject
         }
         catch (Exception ex)
         {
-            // Log del error o manejo según sea necesario
             System.Diagnostics.Debug.WriteLine($"Error cargando datos: {ex.Message}");
             SensorData = new List<SensorData>();
         }
@@ -65,7 +63,6 @@ public partial class SensorViewModel : ObservableObject
     [RelayCommand]
     private void FilterByDate()
     {
-        // Usar rango de fechas para ser más preciso
         var startOfDay = SelectedDate.Date;
         var endOfDay = SelectedDate.Date.AddDays(1);
 

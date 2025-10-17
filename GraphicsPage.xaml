@@ -5,10 +5,11 @@
              xmlns:microcharts="clr-namespace:Microcharts.Maui;assembly=Microcharts.Maui"
              x:Class="ServerMonitor.GraphicsPage"
              x:DataType="vm:GraphicsViewModel"
-             BackgroundColor="LightGray"
-             Padding="10">
+             BackgroundColor="#F5F5F5"
+             Padding="12"
+             Appearing="OnPageAppearing">
 
-    <Grid RowDefinitions="Auto,Auto,Auto,*">
+    <Grid RowDefinitions="Auto,Auto,*">
 
         <Label Grid.Row="0"
                Text="Gráficos del Servidor"
@@ -16,57 +17,110 @@
                FontAttributes="Bold"
                FontFamily="verdana"
                HorizontalOptions="Center"
-               TextColor="#212121"
-               Margin="0,15,0,10"/>
+               TextColor="#1A1A1A"
+               Margin="0,25,0,15"/>
 
         <Border Grid.Row="1"
-                Stroke="#BDBDBD"
+                Stroke="#E0E0E0"
                 StrokeThickness="1"
                 StrokeShape="RoundRectangle 12"
                 BackgroundColor="White"
-                Padding="15"
+                Padding="20"
                 Margin="0,0,0,20">
-            <VerticalStackLayout Spacing="10">
-                <Label Text="Filtrar por Fecha y Sensor" FontAttributes="Bold" FontFamily="times" HorizontalOptions="Center"/>
-                <Grid ColumnDefinitions="*,Auto,*" ColumnSpacing="10">
-                    <VerticalStackLayout Grid.Column="0">
-                        <Label Text="Fecha" VerticalOptions="Center" FontFamily="times" FontAttributes="Bold"/>
-                        <DatePicker Date="{Binding SelectedDate}" TextColor="#212121"/>
+            <VerticalStackLayout Spacing="25">
+                <Label Text="Filtrar por Fecha y Sensor" 
+                       FontAttributes="Bold" 
+                       FontFamily="times" 
+                       HorizontalOptions="Center" 
+                       TextColor="#333333"
+                       FontSize="16"/>
+
+                <Grid ColumnDefinitions="*,*,*,*" 
+                      ColumnSpacing="15"
+                      RowSpacing="10">
+
+                    <VerticalStackLayout Grid.Column="0" 
+                                       Spacing="8">
+                        <Label Text="Fecha" 
+                               FontFamily="times" 
+                               FontAttributes="Bold" 
+                               TextColor="#555555"
+                               FontSize="14"/>
+                        <DatePicker Date="{Binding SelectedDate}" 
+                                    TextColor="#212121"
+                                    HeightRequest="40"/>
                     </VerticalStackLayout>
-                    <Button Grid.Column="1"
-                            Text="Filtrar"
-                            Command="{Binding FilterByDateCommand}"
-                            BackgroundColor="#4d62da"
-                            TextColor="White"
-                            CornerRadius="8"
-                            FontFamily="verdana"
-                            Padding="15,8"
-                            VerticalOptions="End"/>
-                    <VerticalStackLayout Grid.Column="2">
-                        <Label Text="Sensor:" VerticalOptions="Center" FontFamily="times" FontAttributes="Bold"/>
+
+                    <!-- Columna 1: Sensor -->
+                    <VerticalStackLayout Grid.Column="1" 
+                                       Spacing="8">
+                        <Label Text="Sensor:" 
+                               FontFamily="times" 
+                               FontAttributes="Bold" 
+                               TextColor="#555555"
+                               FontSize="14"/>
                         <Picker ItemsSource="{Binding Sensors}"
                                 SelectedItem="{Binding SelectedSensor}"
-                                WidthRequest="120"/>
+                                HeightRequest="40"
+                                HorizontalOptions="Fill"/>
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Grid.Column="2" 
+                                       Spacing="8">
+                        <Label Text="Gráfico:" 
+                               FontFamily="times" 
+                               FontAttributes="Bold" 
+                               TextColor="#555555"
+                               FontSize="14"/>
+                        <Picker ItemsSource="{Binding ChartTypes}"
+                                SelectedItem="{Binding SelectedChartType}"
+                                HeightRequest="40"
+                                HorizontalOptions="Fill"/>
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Grid.Column="3" 
+                                       Spacing="8"
+                                       VerticalOptions="End">
+                        <Label Text=" " 
+                               FontSize="14"
+                               IsVisible="True"/>
+                        <Button Text="Filtrar"
+                                Command="{Binding FilterByDateCommand}"
+                                BackgroundColor="#4d62da"
+                                TextColor="White"
+                                CornerRadius="8"
+                                FontFamily="verdana"
+                                HeightRequest="40"
+                                FontAttributes="Bold"
+                                HorizontalOptions="Fill"/>
                     </VerticalStackLayout>
                 </Grid>
             </VerticalStackLayout>
         </Border>
 
-        <ScrollView Grid.Row="2">
-            <Border Stroke="#BDBDBD"
-                    StrokeThickness="2"
-                    StrokeShape="RoundRectangle 15"
-                    BackgroundColor="#FFFFFF"
-                    Padding="15"
-                    Margin="0,0,0,10"
-                    HorizontalOptions="Fill">
-                <microcharts:ChartView Chart="{Binding Chart}"
-                                       HeightRequest="450"
-                                       HorizontalOptions="FillAndExpand"
-                                       VerticalOptions="FillAndExpand"/>
-            </Border>
-        </ScrollView>
+        <Grid Grid.Row="2" Margin="0,50,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
 
+            <ScrollView Grid.Column="0" 
+                        Orientation="Horizontal"
+                        HorizontalScrollBarVisibility="{Binding ScrollBarVisibility}">
+                <Border Stroke="#D0D0D0"
+                        StrokeThickness="2"
+                        StrokeShape="RoundRectangle 18"
+                        BackgroundColor="#FFFFFF"
+                        Padding="15"
+                        Margin="0,0,10,10"
+                        MinimumWidthRequest="{Binding ChartMinWidth}"
+                        WidthRequest="{Binding ChartWidth}">
+                    <microcharts:ChartView Chart="{Binding Chart}"
+                                           HeightRequest="300"
+                                           HorizontalOptions="{Binding ChartHorizontalOptions}"
+                                           VerticalOptions="Fill" />
+                </Border>
+            </ScrollView>
+        </Grid>
     </Grid>
-
 </ContentPage>

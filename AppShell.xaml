@@ -19,11 +19,11 @@
         </ResourceDictionary>
     </Shell.Resources>
 
-    <!-- Barra de título personalizada con logo centrado, ícono de hamburguesa nativo -->
+
     <Shell.TitleView>
         <Grid ColumnDefinitions="Auto,*,Auto" VerticalOptions="Center">
             <Label Grid.Column="0" WidthRequest="40"/>
-            <!-- Placeholder para el ícono de hamburguesa -->
+
             <Image Grid.Column="1"
                    Source="logo.png"
                    HeightRequest="50"
@@ -32,14 +32,14 @@
             <Label Grid.Column="2" WidthRequest="40"/>
         </Grid>
     </Shell.TitleView>
-    <!-- Opciones del menú con estilo mejorado -->
-    <FlyoutItem Title="DATOS" Icon="{FontImageSource FontFamily=MaterialIcons, Glyph=home, Color=White}" FlyoutDisplayOptions="AsSingleItem">
+
+    <FlyoutItem Title="DATOS" Icon="{FontImageSource FontFamily=Material, Glyph=&#xE88A;, Color=black}" FlyoutDisplayOptions="AsSingleItem">
         <ShellContent Route="MainPage" ContentTemplate="{DataTemplate local:MainPage}"/>
     </FlyoutItem>
-    <FlyoutItem Title="GRÁFICOS" Icon="{FontImageSource FontFamily=MaterialIcons, Glyph=bar_chart, Color=White}" FlyoutDisplayOptions="AsSingleItem">
+    <FlyoutItem Title="GRÁFICOS" Icon="{FontImageSource FontFamily=Material, Glyph=&#xE4B8;, Color=black}" FlyoutDisplayOptions="AsSingleItem">
         <ShellContent Route="GraphicsPage" ContentTemplate="{DataTemplate local:GraphicsPage}"/>
     </FlyoutItem>
-    <!-- Estilo del flyout -->
+
     <Shell.FlyoutHeader>
         <Grid BackgroundColor="#4d62da" Padding="20" HeightRequest="100">
             <Image Source="logo_menu.png" HeightRequest="60" HorizontalOptions="Center" VerticalOptions="Center"/>

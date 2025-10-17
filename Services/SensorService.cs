@@ -6,7 +6,7 @@ namespace ServerMonitor.Services;
 public class SensorService
 {
     private readonly HttpClient _httpClient;
-    private const string ApiUrl = "http://10.127.212.163:3000/api/iot/data";
+    private const string ApiUrl = "https://iot-monitoring-backend-w51f.onrender.com/api/iot/data";
 
     public SensorService(HttpClient httpClient)
     {
