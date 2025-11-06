@@ -61,22 +61,40 @@ public partial class SensorViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void FilterByDate()
+    private async Task FilterByDate()
     {
-        var startOfDay = SelectedDate.Date;
-        var endOfDay = SelectedDate.Date.AddDays(1);
+        try
+        {
+            IsBusy = true;
 
-        var query = SensorData
-            .Where(s => s.Timestamp >= startOfDay && s.Timestamp < endOfDay);
+            var data = await _sensorService.GetSensorDataAsync(SelectedDate);
+            SensorData = data ?? new List<SensorData>();
 
-        if (SelectedLevel == "Críticos")
-            query = query.Where(s => s.IsAlarm);
-        else
-            query = query.Where(s => !s.IsAlarm);
+            var startOfDay = SelectedDate.Date;
+            var endOfDay = SelectedDate.Date.AddDays(1);
 
-        _filteredData = query.OrderByDescending(x => x.Timestamp).ToList();
-        CurrentPage = 1;
-        RefreshPage();
+            var query = SensorData
+                .Where(s => s.Timestamp >= startOfDay && s.Timestamp < endOfDay);
+
+            if (SelectedLevel == "Críticos")
+                query = query.Where(s => s.IsAlarm);
+            else
+                query = query.Where(s => !s.IsAlarm);
+
+            _filteredData = query.OrderByDescending(x => x.Timestamp).ToList();
+            CurrentPage = 1;
+            RefreshPage();
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Error filtering by date: {ex.Message}");
+            _filteredData = new List<SensorData>();
+            RefreshPage();
+        }
+        finally
+        {
+            IsBusy = false;
+        }
     }
 
     [RelayCommand]

@@ -52,7 +52,7 @@
     </Shell.FlyoutHeader>
 
     <Shell.FlyoutFooter>
-        <Grid BackgroundColor="#4d62da" Padding="20" HeightRequest="50">
+        <Grid BackgroundColor="#4d62da" Padding="18" HeightRequest="50">
             <Label Text="DieFer v1.0 - 2025"
                    FontSize="12"
                    TextColor="White"

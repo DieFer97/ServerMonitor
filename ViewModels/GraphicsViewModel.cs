@@ -112,16 +112,35 @@ public partial class GraphicsViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void FilterByDate()
+    private async Task FilterByDate()
     {
-        var startOfDay = SelectedDate.Date;
-        var endOfDay = SelectedDate.Date.AddDays(1);
+        try
+        {
+            IsBusy = true;
 
-        var query = SensorData
-            .Where(s => s.Timestamp >= startOfDay && s.Timestamp < endOfDay);
+            var data = await _sensorService.GetSensorDataAsync(SelectedDate);
+            SensorData = data ?? new List<SensorData>();
 
-        _filteredData = query.OrderBy(x => x.Timestamp).ToList();
-        UpdateChart();
+            var startOfDay = SelectedDate.Date;
+            var endOfDay = SelectedDate.Date.AddDays(1);
+
+            _filteredData = SensorData
+                .Where(s => s.Timestamp >= startOfDay && s.Timestamp < endOfDay)
+                .OrderBy(x => x.Timestamp)
+                .ToList();
+
+            UpdateChart();
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Error filtering by date: {ex.Message}");
+            _filteredData = new List<SensorData>();
+            UpdateChart();
+        }
+        finally
+        {
+            IsBusy = false;
+        }
     }
 
     private void UpdateChart()
