@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ServerMonitor.LoginPage"
+             BackgroundColor="#f5f5f5">
+
+    <VerticalStackLayout 
+        Padding="20"
+        Spacing="0"
+        VerticalOptions="FillAndExpand"
+        HorizontalOptions="FillAndExpand">
+
+        <VerticalStackLayout 
+            Spacing="10"
+            VerticalOptions="Start"
+            Margin="0,40,0,40">
+
+            <Label 
+                Text="IoT Monitoring"
+                FontSize="28"
+                FontAttributes="Bold"
+                TextColor="#4d62da"
+                HorizontalTextAlignment="Center"/>
+
+            <Label 
+                Text="Inicia sesión para continuar"
+                FontSize="14"
+                TextColor="#888888"
+                HorizontalTextAlignment="Center"/>
+        </VerticalStackLayout>
+
+        <VerticalStackLayout Spacing="15">
+
+            <VerticalStackLayout Spacing="5">
+                <Label 
+        Text="Email"
+        FontSize="12"
+        FontAttributes="Bold"
+        TextColor="#212121"/>
+
+                <Entry 
+        x:Name="EmailEntry"
+        Placeholder="Correo electrónico"
+        PlaceholderColor="#cccccc"
+        TextColor="#212121"
+        BackgroundColor="White"
+        Margin="0,0,0,0"
+        IsPassword="False"
+        Text="{Binding Email}"/>
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Spacing="5">
+                <Label 
+        Text="Contraseña"
+        FontSize="12"
+        FontAttributes="Bold"
+        TextColor="#212121"/>
+
+                <Entry 
+        x:Name="PasswordEntry"
+        Placeholder="••••••••"
+        PlaceholderColor="#cccccc"
+        TextColor="#212121"
+        BackgroundColor="White"
+        Margin="12,0,0,0"
+        IsPassword="True"
+        Text="{Binding Password}"/>
+            </VerticalStackLayout>
+
+            <Label 
+                x:Name="ErrorLabel"
+                Text="{Binding ErrorMessage}"
+                FontSize="12"
+                TextColor="#e74c3c"
+                IsVisible="{Binding ErrorMessage, Converter={StaticResource StringToBoolConverter}}"
+                Margin="0,5,0,0"/>
+
+        </VerticalStackLayout>
+
+        <VerticalStackLayout 
+            Spacing="12"
+            VerticalOptions="End"
+            Margin="0,40,0,20">
+
+            <Button 
+                x:Name="LoginButton"
+                Text="Iniciar Sesión"
+                BackgroundColor="#4d62da"
+                TextColor="White"
+                Padding="12"
+                CornerRadius="6"
+                FontAttributes="Bold"
+                Clicked="OnLoginClicked"
+                IsEnabled="{Binding CanLogin}"/>
+
+            <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
+                <Label 
+                    Text="¿No tienes cuenta? "
+                    FontSize="12"
+                    TextColor="#212121"/>
+
+                <Label 
+                    Text="Regístrate"
+                    FontSize="12"
+                    TextColor="#4d62da"
+                    FontAttributes="Bold">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer 
+                            Command="{Binding RegisterCommand}"
+                            Tapped="OnRegisterTapped"/>
+                    </Label.GestureRecognizers>
+                </Label>
+            </StackLayout>
+
+            <ActivityIndicator 
+                IsRunning="{Binding IsLoading}"
+                IsVisible="{Binding IsLoading}"
+                Color="#4d62da"/>
+
+        </VerticalStackLayout>
+
+    </VerticalStackLayout>
+
+</ContentPage>

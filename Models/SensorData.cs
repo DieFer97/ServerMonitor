@@ -7,4 +7,5 @@ public class SensorData
     public int LightLevel { get; set; }
     public bool IsAlarm { get; set; }
     public DateTime Timestamp { get; set; }
+    public int? UserId { get; set; }
 }

@@ -11,8 +11,8 @@ public static class MauiProgram
     public static MauiApp CreateMauiApp()
     {
         var builder = MauiApp.CreateBuilder();
+
         builder
-            .UseMauiApp<App>()
             .UseMicrocharts()
             .ConfigureFonts(fonts =>
             {
@@ -22,11 +22,21 @@ public static class MauiProgram
             });
 
         builder.Services.AddSingleton<HttpClient>();
+        builder.Services.AddSingleton<AuthService>();
+        builder.Services.AddSingleton<AuthViewModel>();
         builder.Services.AddSingleton<SensorService>();
         builder.Services.AddSingleton<SensorViewModel>();
-        builder.Services.AddSingleton<MainPage>();
         builder.Services.AddSingleton<GraphicsViewModel>();
-        builder.Services.AddSingleton<GraphicsPage>();
+
+        builder.Services.AddTransient<MainPage>();
+        builder.Services.AddTransient<GraphicsPage>();
+        builder.Services.AddTransient<SplashPage>();
+        builder.Services.AddTransient<LoginPage>();
+        builder.Services.AddTransient<RegisterPage>();
+
+        builder.Services.AddSingleton<App>();
+
+        builder.UseMauiApp<App>(sp => sp.GetRequiredService<App>());
 
         return builder.Build();
     }

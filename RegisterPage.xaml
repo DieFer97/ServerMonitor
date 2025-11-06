@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ServerMonitor.RegisterPage"
+             BackgroundColor="#f5f5f5">
+    <VerticalStackLayout Padding="20" Spacing="0" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
+        <VerticalStackLayout Spacing="10" VerticalOptions="Start" Margin="0,30,0,30">
+            <Label Text="Crear Cuenta" FontSize="28" FontAttributes="Bold" TextColor="#4d62da" HorizontalTextAlignment="Center"/>
+            <Label Text="Completa los campos para registrarte" FontSize="14" TextColor="#888888" HorizontalTextAlignment="Center"/>
+        </VerticalStackLayout>
+
+        <VerticalStackLayout Spacing="12">
+            <VerticalStackLayout Spacing="5">
+                <Label Text="Email" FontSize="12" FontAttributes="Bold" TextColor="#212121"/>
+                <Entry Placeholder="correo@ejemplo.com" PlaceholderColor="#cccccc" TextColor="#212121" BackgroundColor="White" Text="{Binding Email}"/>
+            </VerticalStackLayout>
+            <VerticalStackLayout Spacing="5">
+                <Label Text="Nombre" FontSize="12" FontAttributes="Bold" TextColor="#212121"/>
+                <Entry Placeholder="Tu nombre completo" PlaceholderColor="#cccccc" TextColor="#212121" BackgroundColor="White" Text="{Binding Nombre}"/>
+            </VerticalStackLayout>
+            <VerticalStackLayout Spacing="5">
+                <Label Text="Contraseña" FontSize="12" FontAttributes="Bold" TextColor="#212121"/>
+                <Entry Placeholder="Mínimo 6 caracteres" PlaceholderColor="#cccccc" TextColor="#212121" BackgroundColor="White" IsPassword="True" Text="{Binding Password}"/>
+            </VerticalStackLayout>
+            <VerticalStackLayout Spacing="5">
+                <Label Text="Confirmar Contraseña" FontSize="12" FontAttributes="Bold" TextColor="#212121"/>
+                <Entry Placeholder="Repite tu contraseña" PlaceholderColor="#cccccc" TextColor="#212121" BackgroundColor="White" IsPassword="True" Text="{Binding ConfirmPassword}"/>
+            </VerticalStackLayout>
+            <Label Text="{Binding ErrorMessage}" FontSize="12" TextColor="#e74c3c" IsVisible="{Binding HasError}" Margin="0,5,0,0"/>
+        </VerticalStackLayout>
+
+        <VerticalStackLayout Spacing="12" VerticalOptions="End" Margin="0,30,0,20">
+            <Button Text="Registrarse"
+                    BackgroundColor="#4d62da"
+                    TextColor="White"
+                    CornerRadius="6"
+                    FontAttributes="Bold"
+                    Clicked="OnRegisterClicked"
+                    IsEnabled="{Binding CanRegister}" />
+
+            <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
+                <Label Text="¿Ya tienes cuenta? " FontSize="12" TextColor="#212121"/>
+                <Label Text="Inicia sesión" FontSize="12" TextColor="#4d62da" FontAttributes="Bold">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnLoginTapped"/>
+                    </Label.GestureRecognizers>
+                </Label>
+            </StackLayout>
+
+            <ActivityIndicator IsRunning="{Binding IsLoading}" IsVisible="{Binding IsLoading}" Color="#4d62da"/>
+        </VerticalStackLayout>
+    </VerticalStackLayout>
+</ContentPage>

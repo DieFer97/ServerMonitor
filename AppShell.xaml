@@ -19,25 +19,30 @@
         </ResourceDictionary>
     </Shell.Resources>
 
-
     <Shell.TitleView>
         <Grid ColumnDefinitions="Auto,*,Auto" VerticalOptions="Center">
             <Label Grid.Column="0" WidthRequest="40"/>
-
             <Image Grid.Column="1"
                    Source="logo.png"
                    HeightRequest="50"
-                   HorizontalOptions="Center"
-                   VerticalOptions="Center"/>
+                   HorizontalOptions="Center"/>
             <Label Grid.Column="2" WidthRequest="40"/>
         </Grid>
     </Shell.TitleView>
 
-    <FlyoutItem Title="DATOS" Icon="{FontImageSource FontFamily=Material, Glyph=&#xE88A;, Color=black}" FlyoutDisplayOptions="AsSingleItem">
-        <ShellContent Route="MainPage" ContentTemplate="{DataTemplate local:MainPage}"/>
+    <ShellContent Route="login"   ContentTemplate="{DataTemplate local:LoginPage}"   FlyoutItemIsVisible="False"/>
+    <ShellContent Route="register" ContentTemplate="{DataTemplate local:RegisterPage}" FlyoutItemIsVisible="False"/>
+
+    <FlyoutItem Title="DATOS" 
+                Icon="{FontImageSource FontFamily=Material, Glyph=&#xE88A;, Color=Black}"
+                FlyoutDisplayOptions="AsSingleItem">
+        <ShellContent Route="MainPage" ContentTemplate="{DataTemplate local:MainPage}" />
     </FlyoutItem>
-    <FlyoutItem Title="GRÁFICOS" Icon="{FontImageSource FontFamily=Material, Glyph=&#xE4B8;, Color=black}" FlyoutDisplayOptions="AsSingleItem">
-        <ShellContent Route="GraphicsPage" ContentTemplate="{DataTemplate local:GraphicsPage}"/>
+
+    <FlyoutItem Title="GRÁFICOS" 
+                Icon="{FontImageSource FontFamily=Material, Glyph=&#xE4B8;, Color=Black}"
+                FlyoutDisplayOptions="AsSingleItem">
+        <ShellContent Route="GraphicsPage" ContentTemplate="{DataTemplate local:GraphicsPage}" />
     </FlyoutItem>
 
     <Shell.FlyoutHeader>
@@ -45,9 +50,15 @@
             <Image Source="logo_menu.png" HeightRequest="60" HorizontalOptions="Center" VerticalOptions="Center"/>
         </Grid>
     </Shell.FlyoutHeader>
+
     <Shell.FlyoutFooter>
         <Grid BackgroundColor="#4d62da" Padding="20" HeightRequest="50">
-            <Label Text="DieFer v1.0 - 2025" FontSize="12" HorizontalOptions="Center" VerticalOptions="Center" Margin="-10" TextColor="White"/>
+            <Label Text="DieFer v1.0 - 2025"
+                   FontSize="12"
+                   TextColor="White"
+                   HorizontalOptions="Center"
+                   VerticalOptions="Center"/>
         </Grid>
     </Shell.FlyoutFooter>
+
 </Shell>
