@@ -33,6 +33,9 @@ public static class MauiProgram
         builder.Services.AddTransient<SplashPage>();
         builder.Services.AddTransient<LoginPage>();
         builder.Services.AddTransient<RegisterPage>();
+        builder.Services.AddSingleton<UserService>();
+        builder.Services.AddTransient<EditProfileViewModel>();
+        builder.Services.AddTransient<EditProfilePage>();
 
         builder.Services.AddSingleton<App>();
 

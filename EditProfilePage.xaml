@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ServerMonitor.EditProfilePage"
+             Title="Editar Perfil"
+             BackgroundColor="White">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="15">
+
+            <Label Text="Editar mis datos"
+                   FontSize="24"
+                   FontAttributes="Bold"
+                   HorizontalOptions="Center"
+                   TextColor="#4d62da"
+                   Margin="0,0,0,20"/>
+
+            <Label Text="Nombre" FontSize="14" TextColor="#333"/>
+            <Entry x:Name="NombreEntry"
+                   Text="{Binding Nombre}"
+                   Placeholder="Ingresa tu nombre"
+                   BackgroundColor="#F5F5F5"
+                   TextColor="#333"/>
+
+            <Label Text="Email" FontSize="14" TextColor="#333"/>
+            <Entry x:Name="EmailEntry"
+                   Text="{Binding Email}"
+                   Placeholder="Ingresa tu email"
+                   Keyboard="Email"
+                   BackgroundColor="#F5F5F5"
+                   TextColor="#333"/>
+
+            <BoxView HeightRequest="1" Color="#E0E0E0" Margin="0,10,0,10"/>
+
+            <Label Text="Contraseña Actual (requerida)" FontSize="14" TextColor="#333"/>
+            <Entry x:Name="CurrentPasswordEntry"
+                   Text="{Binding CurrentPassword}"
+                   Placeholder="Ingresa tu contraseña actual"
+                   IsPassword="True"
+                   BackgroundColor="#F5F5F5"
+                   TextColor="#333"/>
+
+            <BoxView HeightRequest="1" Color="#E0E0E0" Margin="0,10,0,10"/>
+
+            <Label Text="Cambiar Contraseña (opcional)" 
+                   FontSize="16" 
+                   FontAttributes="Bold"
+                   TextColor="#4d62da"/>
+
+            <Label Text="Nueva Contraseña" FontSize="14" TextColor="#333"/>
+            <Entry x:Name="NewPasswordEntry"
+                   Text="{Binding NewPassword}"
+                   Placeholder="Dejar vacío si no deseas cambiarla"
+                   IsPassword="True"
+                   BackgroundColor="#F5F5F5"
+                   TextColor="#333"/>
+
+            <Label Text="Confirmar Nueva Contraseña" FontSize="14" TextColor="#333"/>
+            <Entry x:Name="ConfirmNewPasswordEntry"
+                   Text="{Binding ConfirmNewPassword}"
+                   Placeholder="Confirma la nueva contraseña"
+                   IsPassword="True"
+                   BackgroundColor="#F5F5F5"
+                   TextColor="#333"/>
+
+            <Label Text="{Binding ErrorMessage}"
+                   TextColor="Red"
+                   IsVisible="{Binding HasError}"
+                   FontSize="12"
+                   HorizontalOptions="Center"/>
+
+            <Label Text="{Binding SuccessMessage}"
+                   TextColor="Green"
+                   IsVisible="{Binding HasSuccess}"
+                   FontSize="12"
+                   HorizontalOptions="Center"/>
+
+            <Button Text="Actualizar Perfil"
+                    Clicked="OnUpdateClicked"
+                    BackgroundColor="#4d62da"
+                    TextColor="White"
+                    HeightRequest="50"
+                    CornerRadius="8"
+                    IsEnabled="{Binding CanUpdate}"
+                    Margin="0,20,0,0"/>
+
+            <ActivityIndicator IsRunning="{Binding IsLoading}"
+                              IsVisible="{Binding IsLoading}"
+                              Color="#4d62da"
+                              HeightRequest="40"/>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

@@ -40,7 +40,6 @@ public class AuthService
 
                 var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
 
-                // CAMBIO: Deserializar como RegisterResponse que contiene el objeto user
                 var registerResponse = JsonSerializer.Deserialize<AuthResponse>(responseText, options);
 
                 if (registerResponse?.User == null || registerResponse.User.Id == 0)
@@ -122,6 +121,20 @@ public class AuthService
         {
             System.Diagnostics.Debug.WriteLine($"[v0] Login Exception: {ex.Message}\n{ex.StackTrace}");
             return (false, "Error: " + ex.Message, null);
+        }
+    }
+
+    public async Task LogoutAsync()
+    {
+        try
+        {
+            SecureStorage.Remove("userId");
+            SecureStorage.Remove("userEmail");
+            await Task.CompletedTask;
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[v0] Logout Exception: {ex.Message}");
         }
     }
 
